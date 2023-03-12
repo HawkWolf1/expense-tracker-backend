@@ -7,23 +7,20 @@ const expenseTable = sequelize.define('expense', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
-        allowNull: false,
         primaryKey: true
     },
     
-    amount: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-    },
-    description: {
+    name: {
         type: Sequelize.STRING,
-        allowNull: false,
+    },
+    
+    email: {
+        type: Sequelize.STRING,
         unique: true
 
     },
-    category: {
+    password: {
         type: Sequelize.STRING,
-        allowNull: false
     }
 },
 {

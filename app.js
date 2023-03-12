@@ -1,4 +1,3 @@
-const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser') 
 const cors = require('cors')
@@ -9,8 +8,8 @@ const userRoutes = require('./expenseRoutes/user')
 
 
 app.use(bodyParser.json({extended: false})) 
-app.use(cors()) // allows cross origin request from anywhere and everywhere
-app.use(userRoutes)
+app.use(cors()) 
+app.use(userRoutes) 
 
 
 sequelize.sync().then(() => {

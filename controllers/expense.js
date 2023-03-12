@@ -1,20 +1,20 @@
 const myTable = require('../models/expenseTable')
 
 
-const addExpense = async (req, res, next) => {
+const addUser = async (req, res, next) => {
     try{
-        if(!req.body.description){
+        if(!req.body.email){
             throw new Error ('Descriptipon is required!')
         }
-    const amount = req.body.amount
-    const description = req.body.description
-    const category = req.body.category
-    console.log(amount, description, category)
+    const name = req.body.name
+    const email = req.body.email
+    const password = req.body.password
+    console.log(name, email, password)
 
     const data = await myTable.create({ 
-        amount: amount, 
-        description: description, 
-        category: category })
+        name: name, 
+        email: email, 
+        password: password })
 
     res.status(201).json({ newExpenseDetail: data })
     } 
@@ -27,7 +27,7 @@ const addExpense = async (req, res, next) => {
 
 
 
-const getExpense = async (req, res, next) => {
+const getUser = async (req, res, next) => {
     try {
         const expense = await myTable.findAll()
         res.status(200).json({ expense })
@@ -39,7 +39,7 @@ const getExpense = async (req, res, next) => {
 
 
 
-const deleteExpense = async (req, res, next) =>{
+const deleteUser = async (req, res, next) =>{
     try{
         if(req.params.id == 'undefined'){
             console.log('ID is missing')
@@ -60,7 +60,7 @@ const deleteExpense = async (req, res, next) =>{
 
 
 module.exports = {
-    addExpense,
-    getExpense,
-    deleteExpense
+    addUser,
+    getUser,
+    deleteUser
 }

@@ -5,10 +5,10 @@ const router = express.Router();
 const userController = require('../controllers/expense')
 
 
-router.post('/expense/add-expense', userController.addExpense)
+router.post('/user/add-user', userController.addUser)
 
-router.get('/expense/get-expense', userController.getExpense )
+router.get('/user/get-user', userController.getUser )
 
-router.delete('/expense/delete-expense/:id', userController.deleteExpense)
+router.delete('/user/delete-user/:id', userController.deleteUser)
 
 module.exports = router

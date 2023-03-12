@@ -5,23 +5,18 @@
             p{text-align: center;}
 
         </style>
-        <h3> EXPENSE TRACKER </h3>
+        <h3> USER DETAILS </h3>
         <body>
 
         <form onsubmit="saveToLocalStorage(event)">
-        <p> <label>CHOOSE EXPENSE AMOUNT</label>
-            <input id="amount" type="number" name="amount" size="50" ><br>
+        <p> <label>NAME</label>
+            <input id="name" type="text" name="name" size="50" ><br>
 
-            <label> CHOOSE DESCRIPTION</label>
-            <input id="description" type="text" name="description" size="50" ><br>
+            <label> EMAIL </label>
+            <input id="email" type="email" name="email" size="50" ><br>
 
-            <label> CHOOSE CATEGORY </label>
-            <select name="category" id="category">
-                <option value = 'fuel'>fuel</option>
-                <option value = 'food'>food</option>
-                <option value = 'vacation'>vacation</option>
-                <option value = 'shopping'>shopping</option>
-            </select>
+            <label> PASSWORD </label>
+            <input id="password" type="password" name="password" size="50" ><br>
 
             <button> SUBMIT </button>
         </form>
@@ -36,22 +31,22 @@
             <script>
                 async function saveToLocalStorage(event){
                     event.preventDefault()
-                    const amount = document.getElementById('amount').value
-                    const description = document.getElementById('description').value
-                    const category = document.getElementById('category').value
+                    const name = document.getElementById('name').value
+                    const email = document.getElementById('email').value
+                    const password = document.getElementById('password').value
 
                     const myObject = {
-                        amount,
-                        description,
-                        category
+                        name,
+                        email,
+                        password
                     }
                     try{
-                        const abc = await axios.post("http://localhost:4000/expense/add-expense", myObject) // we are doing a post request to the backend
+                        const abc = await axios.post("http://localhost:4000/user/add-user", myObject) // we are doing a post request to the backend
                         showNewUserOnScreen(abc.data.newExpenseDetail)
                     }
                        
                     catch(err){
-                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> Description !!! </h3>"
+                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> Email !!! </h3>"
                         console.log("Error Block: ",err)
                     }                  
 
@@ -61,7 +56,7 @@
                 window.addEventListener("DOMContentLoaded", async(event) => {
                     event.preventDefault()
                     try{
-                    const xyz = await axios.get("http://localhost:4000/expense/get-expense")
+                    const xyz = await axios.get("http://localhost:4000/user/get-user")
                     console.log(xyz)
                     for(var i=0; i<xyz.data.expense.length; i++){                       
                              showNewUserOnScreen(xyz.data.expense[i])
@@ -79,9 +74,9 @@
                 function showNewUserOnScreen(user){
                     
                     const parentNode= document.getElementById('listOfUsers')
-                    const childHTML = `<li id=${user.id}> ${user.amount} - ${user.description} - ${user.category} 
+                    const childHTML = `<li id=${user.id}> ${user.name} - ${user.email} - ${user.password} 
                                         <button onclick =deleteExpense('${user.id}')> Delete Expense </button>  
-                                        <button onclick =editExpense('${user.description}','${user.amount}','${user.category}','${user.id}')> 
+                                        <button onclick =editExpense('${user.email}','${user.name}','${user.password}','${user.id}')> 
                                         Edit Expense </button>                                              
                                         </li>`
 
@@ -91,10 +86,10 @@
 
 
 
-                function editExpense(description, amount, category, userId){
-                    document.getElementById('description').value = description
-                    document.getElementById('amount').value = amount
-                    document.getElementById('category').value = category
+                function editExpense(email, name, password, userId){
+                    document.getElementById('email').value = email
+                    document.getElementById('name').value = name
+                    document.getElementById('password').value = password
 
                     deleteExpense(userId)
                 }
@@ -104,7 +99,7 @@
 
                 const deleteExpense = async (userId)=> {
                     // console.log(userId)
-                    try {await axios.delete(`http://localhost:4000/expense/delete-expense/${userId}`)
+                    try {await axios.delete(`http://localhost:4000/user/delete-user/${userId}`)
                     removeUserFromScreen(userId)
                     }
                     catch(err){
