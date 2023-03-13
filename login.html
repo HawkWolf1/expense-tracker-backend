@@ -35,8 +35,8 @@ async function login(event){
             }
             console.log(loginD)
             try{
-                const pqr = await axios.post("http://localhost:4000/user/login", myObject) 
-                alert(response.data.message)
+                const pqr = await axios.post("http://localhost:4000/user/login", loginD) 
+                alert(pqr.data.message)
             }
                        
             catch(err){

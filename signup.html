@@ -5,18 +5,18 @@
             p{text-align: center;}
 
         </style>
-        <h3> USER DETAILS </h3>
+        <h3> SIGN UP PAGE </h3>
         <body>
 
         <form onsubmit="newF(event)">
         <p> <label>NAME</label>
-            <input id="name" type="text" name="name" size="50" ><br>
+            <input id="name" type="text" name="name" required size="50" ><br>
 
             <label> EMAIL </label>
-            <input id="email" type="email" name="email" size="50" ><br>
+            <input id="email" type="email" name="email" required size="50" ><br>
 
             <label> PASSWORD </label>
-            <input id="password" type="password" name="password" size="50" ><br>
+            <input id="password" type="password" name="password" required size="50" ><br>
 
             <button> SIGN UP </button>
         </form>
@@ -42,84 +42,21 @@
                         password
                     }
                     try{
-                        const abc = await axios.post("http://localhost:4000/user/add-user", myObject) // we are doing a post request to the backend
-                        showNewUserOnScreen(abc.data.newUserDetail)
+                        const abc = await axios.post("http://localhost:4000/user/add-user", myObject) 
+                        if (abc.status === 201){
+                            
+                            window.location.href = "./login.html"
+                        } else {
+                            throw new Error('Unable to Sign you Up')
+                        }
                     }
                        
                     catch(err){
-                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> User Exists!!! </h3>"
+                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> Something went wrong!!! </h3>"
                         console.log("Error Block: ",err)
                     }                  
-
-
-
-                }
-                window.addEventListener("DOMContentLoaded", async(event) => {
-                    event.preventDefault()
-                    try{
-                    const xyz = await axios.get("http://localhost:4000/user/get-user")
-                    console.log(xyz)
-                    for(var i=0; i<xyz.data.userA.length; i++){                       
-                             showNewUserOnScreen(xyz.data.userA[i])
-                    }
-                }
-                    catch(err){                       
-                        console.log("Error Block: ",err)
-                    }
-                  
-                })
-
-
-                
-
-                function showNewUserOnScreen(user){
-                    
-                    const parentNode= document.getElementById('listOfUsers')
-                    const childHTML = `<li id=${user.id}> ${user.name} - ${user.email} - ${user.password} 
-                                        <button onclick =deleteUser('${user.id}')> Delete User </button>  
-                                        <button onclick =editUser('${user.email}','${user.name}','${user.password}','${user.id}')> 
-                                        Edit User </button>                                              
-                                        </li>`
-
-                    parentNode.innerHTML = parentNode.innerHTML + childHTML
-                }
-
-
-
-
-                function editUser(email, name, password, userId){
-                    document.getElementById('email').value = email
-                    document.getElementById('name').value = name
-                    document.getElementById('password').value = password
-
-                    deleteUser(userId)
-                }
-
-
-
-
-                const deleteUser = async (userId)=> {
-                    // console.log(userId)
-                    try {await axios.delete(`http://localhost:4000/user/delete-user/${userId}`)
-                    removeUserFromScreen(userId)
-                    }
-                    catch(err){
-                        console.log("Error Block: ",err)
-                    }
-                }
-
-
-
-
-                function removeUserFromScreen(userId){
-                    const parentNode = document.getElementById('listOfUsers')
-                    const childNodeToBeDeleted = document.getElementById(userId)
-
-                    parentNode.removeChild(childNodeToBeDeleted)
-                }
-                
+            }
                
-                
                 
              </script>
         

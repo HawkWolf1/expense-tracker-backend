@@ -1,66 +1,57 @@
 const myTable = require('../models/userTable')
 
 
+function checkString(str) {
+    if(str == undefined || str.length === 0){
+        return true
+    } else{
+        return false
+    }
+}
+
 const addUser = async (req, res, next) => {
     try{
-        if(!req.body.email){
-            throw new Error ('Descriptipon is required!')
+    const {name, email, password} = req.body
+
+    if(checkString(name) || checkString(email) || checkString(password)){
+        return res.status(400).json({ err: "Bad parameters . Something is missing"})
         }
-    const name = req.body.name
-    const email = req.body.email
-    const password = req.body.password
-    console.log(name, email, password)
+    
+        await myTable.create({ 
+        name, 
+        email, 
+        password })
 
-    const data = await myTable.create({ 
-        name: name, 
-        email: email, 
-        password: password })
-
-    res.status(201).json({ newUserDetail: data })
-    } 
-    catch(err){
-        res.status(500).json({
-            error:(err,'!description')
-        })
+    res.status(201).json({ message: 'New User created Successfully!' })
+        }catch(err){
+        res.status(500).json(err)
     }
 }
 
 
 
-const getUser = async (req, res, next) => {
-    try {
-        const userA = await myTable.findAll()
-        res.status(200).json({userA})
-    } catch (error) {
-        console.log('Get user is failing', JSON.stringify(error))
-        res.status(500).json({ error: 'err' })
-    }
-}
-
-
-
-const deleteUser = async (req, res, next) =>{
+const loginN = async (req, res, next) => {
     try{
-        if(req.params.id == 'undefined'){
-            console.log('ID is missing')
-            return  res.status(400).json({ 
-                                 err: 'ID is missing' })
+    const {email, password} = req.body
+
+    const xyz = await myTable.findAll({where :{email}})
+        if(xyz.length >0){
+           if(xyz[0].password === password){
+            return res.status(200).json({success: true, message: 'user logged in successfully'})
+           } else{
+            return res.status(400).json({success: false, message: 'check password!'})
+           }
+        } else{
+            return res.status(404).json({success: false, message: 'No such User exists'})
         }
-        const uId = req.params.id
-        console.log(uId)
-        await myTable.destroy({ where: { id: uId } })
-        res.sendStatus(200)
-    }catch (err) {
-                console.log('Not working', JSON.stringify(err))
-                res.status(500).json(err)
-            }
-        
+    }catch(err){
+        res.status(500).json({message: err, success: false})
+    }
 }
 
 
 
 module.exports = {
     addUser,
-    getUser,
-    deleteUser
+    loginN
 }
