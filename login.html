@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <style>
+            h3{text-align: center;}
+            p{text-align: center;}
+
+        </style>
+        <h3> LOGIN PAGE </h3>
+        <body>
+    
+    <form onsubmit="login(event)">
+    <p><label> EMAIL </label>
+    <input id="email" type="email" name="email" size="50" ><br>
+
+    <label> PASSWORD </label>
+    <input id="password" type="password" name="password" size="50" ><br>
+
+    <button> LOGIN </button>
+</form>
+</p>
+<a href = "./signup.html"> New User - SIGN UP</a>
+<ul id="wholeList"> </ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+<script>
+async function login(event){
+        event.preventDefault()
+        const email = document.getElementById('email').value
+        const password = document.getElementById('password').value
+
+            const loginD = {
+                email,
+                password
+            }
+            console.log(loginD)
+            try{
+                const pqr = await axios.post("http://localhost:4000/user/login", myObject) 
+                alert(response.data.message)
+            }
+                       
+            catch(err){
+                console.log(JSON.stringify(err))
+                document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> We have an Error!!! </h3>"
+                
+            }                  
+
+                }
+
+</script>
+
+
+
+
+</body>
+</head>
+</html>

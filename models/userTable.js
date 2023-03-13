@@ -3,7 +3,7 @@ const Sequelize = require('sequelize')
 const sequelize = require('../util/database')
 
 
-const expenseTable = sequelize.define('expense', {
+const userTable = sequelize.define('ourUser', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -28,4 +28,4 @@ const expenseTable = sequelize.define('expense', {
 }
 )   
 
-module.exports = expenseTable
+module.exports = userTable

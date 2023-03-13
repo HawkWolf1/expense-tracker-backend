@@ -8,7 +8,7 @@
         <h3> USER DETAILS </h3>
         <body>
 
-        <form onsubmit="saveToLocalStorage(event)">
+        <form onsubmit="newF(event)">
         <p> <label>NAME</label>
             <input id="name" type="text" name="name" size="50" ><br>
 
@@ -18,9 +18,10 @@
             <label> PASSWORD </label>
             <input id="password" type="password" name="password" size="50" ><br>
 
-            <button> SUBMIT </button>
+            <button> SIGN UP </button>
         </form>
         </p>
+        <a href = "./login.html"> Existing User - LOGIN</a>
         <ul id="listOfUsers"> </ul>
 
  
@@ -29,7 +30,7 @@
 
 
             <script>
-                async function saveToLocalStorage(event){
+                async function newF(event){
                     event.preventDefault()
                     const name = document.getElementById('name').value
                     const email = document.getElementById('email').value
@@ -42,11 +43,11 @@
                     }
                     try{
                         const abc = await axios.post("http://localhost:4000/user/add-user", myObject) // we are doing a post request to the backend
-                        showNewUserOnScreen(abc.data.newExpenseDetail)
+                        showNewUserOnScreen(abc.data.newUserDetail)
                     }
                        
                     catch(err){
-                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> Email !!! </h3>"
+                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> User Exists!!! </h3>"
                         console.log("Error Block: ",err)
                     }                  
 
@@ -58,8 +59,8 @@
                     try{
                     const xyz = await axios.get("http://localhost:4000/user/get-user")
                     console.log(xyz)
-                    for(var i=0; i<xyz.data.expense.length; i++){                       
-                             showNewUserOnScreen(xyz.data.expense[i])
+                    for(var i=0; i<xyz.data.userA.length; i++){                       
+                             showNewUserOnScreen(xyz.data.userA[i])
                     }
                 }
                     catch(err){                       
@@ -75,9 +76,9 @@
                     
                     const parentNode= document.getElementById('listOfUsers')
                     const childHTML = `<li id=${user.id}> ${user.name} - ${user.email} - ${user.password} 
-                                        <button onclick =deleteExpense('${user.id}')> Delete Expense </button>  
-                                        <button onclick =editExpense('${user.email}','${user.name}','${user.password}','${user.id}')> 
-                                        Edit Expense </button>                                              
+                                        <button onclick =deleteUser('${user.id}')> Delete User </button>  
+                                        <button onclick =editUser('${user.email}','${user.name}','${user.password}','${user.id}')> 
+                                        Edit User </button>                                              
                                         </li>`
 
                     parentNode.innerHTML = parentNode.innerHTML + childHTML
@@ -86,18 +87,18 @@
 
 
 
-                function editExpense(email, name, password, userId){
+                function editUser(email, name, password, userId){
                     document.getElementById('email').value = email
                     document.getElementById('name').value = name
                     document.getElementById('password').value = password
 
-                    deleteExpense(userId)
+                    deleteUser(userId)
                 }
 
 
 
 
-                const deleteExpense = async (userId)=> {
+                const deleteUser = async (userId)=> {
                     // console.log(userId)
                     try {await axios.delete(`http://localhost:4000/user/delete-user/${userId}`)
                     removeUserFromScreen(userId)

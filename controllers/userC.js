@@ -1,4 +1,4 @@
-const myTable = require('../models/expenseTable')
+const myTable = require('../models/userTable')
 
 
 const addUser = async (req, res, next) => {
@@ -16,7 +16,7 @@ const addUser = async (req, res, next) => {
         email: email, 
         password: password })
 
-    res.status(201).json({ newExpenseDetail: data })
+    res.status(201).json({ newUserDetail: data })
     } 
     catch(err){
         res.status(500).json({
@@ -29,8 +29,8 @@ const addUser = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
     try {
-        const expense = await myTable.findAll()
-        res.status(200).json({ expense })
+        const userA = await myTable.findAll()
+        res.status(200).json({userA})
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
         res.status(500).json({ error: 'err' })
