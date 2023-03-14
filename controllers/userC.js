@@ -1,5 +1,6 @@
 const myTable = require('../models/userTable')
 
+const bcrypt = require('bcrypt')
 
 function checkString(str) {
     if(str == undefined || str.length === 0){
@@ -17,14 +18,19 @@ const addUser = async (req, res, next) => {
         return res.status(400).json({ err: "Bad parameters . Something is missing"})
         }
     
-        await myTable.create({ 
-        name, 
-        email, 
-        password })
+    const saltrounds =10
+    bcrypt.hash(password, saltrounds, async(err, hash) =>{
+        console.log(err)
+       
+    await myTable.create({ 
+    name, 
+    email, 
+    password: hash })
 
-    res.status(201).json({ message: 'New User created Successfully!' })
-        }catch(err){
-        res.status(500).json(err)
+    res.status(201).json({ message: 'New User created Successfully!' }) 
+})
+    }catch(err){
+    res.status(500).json(err)
     }
 }
 
@@ -36,11 +42,20 @@ const loginN = async (req, res, next) => {
 
     const xyz = await myTable.findAll({where :{email}})
         if(xyz.length >0){
-           if(xyz[0].password === password){
-            return res.status(200).json({success: true, message: 'user logged in successfully'})
-           } else{
-            return res.status(400).json({success: false, message: 'check password!'})
-           }
+            bcrypt.compare(password, xyz[0].password, (err,result) => {
+                if(err){
+                    res.status(500).json({success: false, message: 'We got some error'})
+                }
+                if(result===true){
+                    res.status(200).json({success: true, message: 'Login is successful'})
+                }
+                else{
+                  return res.status(400).json({success: false, message: 'Password is incorrect'})
+                }
+                
+            })
+           
+
         } else{
             return res.status(404).json({success: false, message: 'No such User exists'})
         }
