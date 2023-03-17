@@ -4,7 +4,7 @@ const cors = require('cors')
 const app = express() 
 
 const sequelize = require('./util/database')
-const userRoutes = require('./userRoutes/user')
+const userRoutes = require('./Routes/user')
 
 
 app.use(bodyParser.json({extended: false})) 

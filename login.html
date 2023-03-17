@@ -37,6 +37,12 @@ async function login(event){
             try{
                 const pqr = await axios.post("http://localhost:4000/user/login", loginD) 
                 alert(pqr.data.message)
+                if (pqr.status === 200){                           
+                         window.location.href = "./expense.html"
+                        } else {
+                            throw new Error('Unable to log you in!')
+                        }
+                
             }
                        
             catch(err){
@@ -44,7 +50,6 @@ async function login(event){
                 document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> We have an Error!!! </h3>"
                 
             }                  
-
                 }
 
 </script>
