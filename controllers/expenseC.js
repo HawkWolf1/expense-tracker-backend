@@ -8,9 +8,11 @@ const addExpense = async (req, res, next) => {
     const {amount, description, category} = req.body
 
     const data = await ETable.create({ 
-        amount: amount, 
-        description: description, 
-        category: category })
+        amount, 
+        description, 
+        category,
+        ourUserId : req.user.id
+     })
 
     res.status(201).json({ newExpenseDetail: data })
     } 
@@ -25,7 +27,7 @@ const addExpense = async (req, res, next) => {
 
 const getExpense = async (req, res, next) => {
     try {
-        const expense = await ETable.findAll()
+        const expense = await req.user.getExpenses()
         res.status(200).json({ ex: expense })
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
@@ -44,7 +46,11 @@ const deleteExpense = async (req, res, next) =>{
         }
         const uId = req.params.id
         console.log(uId)
-        await ETable.destroy({ where: { id: uId } })
+        const Row = await ETable.destroy({ where: { id: uId, ourUserId : req.user.id
+         } })
+         if (Row ===0){
+            return res.status(404).json({success: false, message: 'expense doesnot belong to the user'})
+         }
         res.sendStatus(200)
     }catch (err) {
                 console.log('Not working', JSON.stringify(err))

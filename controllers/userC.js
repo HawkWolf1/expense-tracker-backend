@@ -1,6 +1,7 @@
 const myTable = require('../models/userTable')
 
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 function checkString(str) {
     if(str == undefined || str.length === 0){
@@ -34,7 +35,12 @@ const addUser = async (req, res, next) => {
     }
 }
 
+// this function will generate the token and we have to check when and where do we call this function
+// we will call this when the user has succesfully logged in
 
+function generateAccessToken(id, name){
+    return jwt.sign({userId:id, name:name}, 'Rockettt')
+}
 
 const loginN = async (req, res, next) => {
     try{
@@ -47,7 +53,7 @@ const loginN = async (req, res, next) => {
                     res.status(500).json({success: false, message: 'We got some error'})
                 }
                 if(result===true){
-                    res.status(200).json({success: true, message: 'Login is successful'})
+                    res.status(200).json({success: true, message: 'Login is successful', token: generateAccessToken(xyz[0].id, xyz[0].name)})
                 }
                 else{
                   return res.status(400).json({success: false, message: 'Password is incorrect'})
