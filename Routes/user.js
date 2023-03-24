@@ -8,7 +8,6 @@ const userAuthentication = require('../middleware/auth')
 
 
 router.post('/user/add-user', userController.addUser)
-
 router.post('/user/login', userController.loginN)
 
 
