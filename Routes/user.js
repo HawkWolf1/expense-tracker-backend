@@ -6,6 +6,7 @@ const userController = require('../controllers/userC')
 const expenseController = require('../controllers/expenseC')
 const userAuthentication = require('../middleware/auth')
 const purchaseController = require('../controllers/purchaseC')
+const premiumLeaderboardController = require('../controllers/premiumFeatureLeaderboard')
 
 
 router.post('/user/add-user', userController.addUser)
@@ -18,5 +19,7 @@ router.delete('/expense/delete-expense/:id', userAuthentication.authenticate, ex
 
 router.get('/purchase/premiummembership', userAuthentication.authenticate, purchaseController.purchasePremium)
 router.post('/purchase/updatetransactionstatus', userAuthentication.authenticate, purchaseController.updateTransactionStatus)
+
+router.get('/premium/showleaderboard', userAuthentication.authenticate, premiumLeaderboardController.fetchUserLeaderBoard)
 
 module.exports = router

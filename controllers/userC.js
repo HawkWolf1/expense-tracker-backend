@@ -35,12 +35,14 @@ const addUser = async (req, res, next) => {
     }
 }
 
-// this function will generate the token and we have to check when and where do we call this function
-// we will call this when the user has succesfully logged in
+
+
 
 function generateAccessToken(id, name, isPremiumUser){
     return jwt.sign({userId:id, name:name, isPremiumUser}, 'Rockettt')
 }
+
+
 
 const loginN = async (req, res, next) => {
     try{

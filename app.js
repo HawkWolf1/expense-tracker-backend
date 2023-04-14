@@ -5,7 +5,7 @@ const app = express()
 
 const sequelize = require('./util/database')
 const userRoutes = require('./Routes/user')
-
+ 
 
 const ETable = require('./models/expenseTable')
 const myTable = require('./models/userTable')

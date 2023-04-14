@@ -71,6 +71,47 @@
 
                 }
 
+
+                
+                function showLeaderboard(){
+                    const a = document.createElement('input')
+                    a.type = 'button'
+                    a.id = 'board'
+                    a.value = 'Show Leaderboards'
+
+                    const b = document.createElement('div')
+                    b.id = 'container'
+
+                    a.onclick = async() =>{
+                        console.log('leaderboard working')
+                        const token = localStorage.getItem('token')
+                        const response = await axios.get("http://localhost:4000/premium/showleaderboard", {headers: {'Authorization': token}})
+
+                        const c = response.data
+                        console.log(c)
+
+                        const d = document.createElement('ul');
+                        d.id = 'leaderboard-list';
+                        
+                        c.forEach(userDetails => {
+                            const e = document.createElement('li')
+                            e.textContent = `Name - ${userDetails.name}, Total Cost - ${userDetails.total_cost}`
+
+                            d.appendChild(e)
+                        })
+
+                        b.innerHTML = '<h1>Leaderboard</h1>';
+                        b.appendChild(d);
+                        
+                    }
+                    document.getElementById('premium_user').appendChild(a);
+                    document.getElementById('premium_user').appendChild(b);
+                }
+
+
+
+
+
                 function parseJwt (token) {
                     var base64Url = token.split('.')[1];
                     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -87,6 +128,7 @@
                     
                     if(isPremiumUser){
                      showPremiumUserMessage()
+                     showLeaderboard()
                     }
                     event.preventDefault()
                     try{
@@ -158,10 +200,10 @@
                     const pqr = await axios.get("http://localhost:4000/purchase/premiummembership", {headers: {'Authorization' : token}})
                     console.log(pqr)
                     var options = {
-                        'key':pqr.data.key_id, //unique identifier of our company
-                        'order_id' : pqr.data.order.id, // this is passed whilr preparing an order
+                        'key':pqr.data.key_id, 
+                        'order_id' : pqr.data.order.id, 
 
-                        // the handler function isgoing to be calledwhenever the payment is succesful
+                        
                         'handler' : async function (bbb){
                             const res = await axios.post("http://localhost:4000/purchase/updatetransactionstatus",{
                             order_id: options.order_id,
@@ -171,9 +213,8 @@
                             alert('You are a premium user now')
                             
                              
-                            document.getElementById("Premium1").remove() 
-                            document.getElementById("premium_user").innerHTML = "<h3 style='color:blue; border:1px solid blue; padding:5px'> you are a premium user  </h3>"
-                            localStorage.setItem('token', res.data.token)
+                            showPremiumUserMessage()
+                            showLeaderboard()
                         
                     }
                     }
@@ -188,7 +229,7 @@
                     })
                 }
 
-
+                
              </script>
         
         </body>
