@@ -1,27 +1,60 @@
 const ETable = require('../models/expenseTable')
-
+const myTable = require('../models/userTable')
 
 
 const addExpense = async (req, res, next) => {
-    try{
-        
-    const {amount, description, category} = req.body
-
-    const data = await ETable.create({ 
-        amount, 
-        description, 
-        category,
-        ourUserId : req.user.id
-     })
-
-    res.status(201).json({ newExpenseDetail: data })
-    } 
-    catch(err){
-        res.status(500).json({
-            error:(err,'!description')
-        })
+    const { amount, description, category } = req.body;
+  
+    if (amount === undefined || amount.length === 0) {
+      return res.status(400).json({ success: false, message: 'parameters missing' });
     }
-}
+  
+    try {
+      const expense = await ETable.create({ amount, description, category, ourUserId: req.user.id });
+  
+      const totalExpense = Number(req.user.totalExpenses) + Number(amount);
+      console.log(totalExpense);
+  
+      await myTable.update(
+        {
+          totalExpenses: totalExpense,
+        },
+        {
+          where: { id: req.user.id },
+        }
+      )
+  
+      res.status(201).json({ expense: expense });
+    } catch (err) {
+      return res.status(500).json({ success: false, error: err });
+    }
+  };
+
+  
+  
+  
+  
+  
+  
+    // try{
+        
+    // const {amount, description, category} = req.body
+
+    // const data = await ETable.create({ 
+    //     amount, 
+    //     description, 
+    //     category,
+    //     ourUserId : req.user.id
+    //  })
+
+    // res.status(201).json({ newExpenseDetail: data })
+    // } 
+    // catch(err){
+    //     res.status(500).json({
+    //         error:(err,'!description')
+    //     })
+    // }
+
 
 
 

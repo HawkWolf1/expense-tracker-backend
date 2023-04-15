@@ -52,7 +52,7 @@
                     const token = localStorage.getItem('token')
                     try{
                         const abc = await axios.post("http://localhost:4000/expense/add-expense", myObject,  {headers: {'Authorization' : token}}) 
-                            showNewUserOnScreen(abc.data.newExpenseDetail)
+                            showNewUserOnScreen(abc.data.expense)
                        
                         
                     }
@@ -95,12 +95,12 @@
                         
                         c.forEach(userDetails => {
                             const e = document.createElement('li')
-                            e.textContent = `Name - ${userDetails.name}, Total Cost - ${userDetails.total_cost}`
+                            e.textContent = `Name - ${userDetails.name}, Total Cost - ${userDetails.totalExpenses}`
 
                             d.appendChild(e)
                         })
 
-                        b.innerHTML = '<h1>Leaderboard</h1>';
+                        b.innerHTML = '<h1>Leaderboards</h1>';
                         b.appendChild(d);
                         
                     }
@@ -148,7 +148,6 @@
                 
 
                 function showNewUserOnScreen(user){
-                    
                     const parentNode= document.getElementById('listOfExpenses')
                     const childHTML = `<li id=${user.id}> ${user.amount} - ${user.description} - ${user.category} 
                                         <button onclick =deleteExpense('${user.id}')> Delete Expense </button>  
@@ -156,7 +155,10 @@
                                         Edit Expense </button>                                              
                                         </li>`
 
-                    parentNode.innerHTML = parentNode.innerHTML + childHTML
+                    if (!parentNode.innerHTML.includes("<h1>My Expenses</h1>")){
+                        parentNode.innerHTML = `<h1>My Expenses</h1>`;
+                    }
+                    parentNode.innerHTML += childHTML;
                 }
 
 
@@ -215,6 +217,7 @@
                              
                             showPremiumUserMessage()
                             showLeaderboard()
+                            localStorage.setItem('token', res.data.token) // It prevents the premium message from loss at frontend
                         
                     }
                     }

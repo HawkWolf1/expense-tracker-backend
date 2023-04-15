@@ -25,9 +25,13 @@ const userTable = sequelize.define('ourUser', {
     },
     isPremiumUser: {
         type: Sequelize.BOOLEAN,
-        default: false
+        defaultValue: false
         
     },
+    totalExpenses:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    }
 },
 {
     timestamps: false
