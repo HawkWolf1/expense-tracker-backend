@@ -1,8 +1,9 @@
 const ETable = require('../models/expenseTable')
 const myTable = require('../models/userTable')
-
+const sequelize = require('../util/database')
 
 const addExpense = async (req, res, next) => {
+    const t = await sequelize.transaction()
     const { amount, description, category } = req.body;
   
     if (amount === undefined || amount.length === 0) {
@@ -10,7 +11,7 @@ const addExpense = async (req, res, next) => {
     }
   
     try {
-      const expense = await ETable.create({ amount, description, category, ourUserId: req.user.id });
+      const expense = await ETable.create({ amount, description, category, ourUserId: req.user.id }, {transaction:t});
   
       const totalExpense = Number(req.user.totalExpenses) + Number(amount);
       console.log(totalExpense);
@@ -21,11 +22,13 @@ const addExpense = async (req, res, next) => {
         },
         {
           where: { id: req.user.id },
+          transaction:t
         }
       )
-  
+      await t.commit()
       res.status(201).json({ expense: expense });
     } catch (err) {
+      await t.rollback()
       return res.status(500).json({ success: false, error: err });
     }
   };
@@ -79,12 +82,33 @@ const deleteExpense = async (req, res, next) =>{
         }
         const uId = req.params.id
         console.log(uId)
-        const Row = await ETable.destroy({ where: { id: uId, ourUserId : req.user.id
-         } })
-         if (Row ===0){
+
+        const expense = await ETable.findOne({
+          where: {
+            id: uId,
+            ourUserId: req.user.id
+          }
+        })
+
+        const totalExpenses = await ETable.sum('amount', {
+          where: { ourUserId: req.user.id }
+        })
+        const updatedTotalExpenses = totalExpenses - expense.amount
+
+        const RowD = await ETable.destroy({ where: { id: uId, ourUserId : req.user.id} })
+
+        await myTable.update(
+          { totalExpenses: updatedTotalExpenses },
+          { where: { id: req.user.id } }
+        )
+        
+         if (RowD ===0){
             return res.status(404).json({success: false, message: 'expense doesnot belong to the user'})
          }
         res.sendStatus(200)
+        
+        
+        
     }catch (err) {
                 console.log('Not working', JSON.stringify(err))
                 res.status(500).json(err)
