@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "aws-sdk": "^2.1361.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -8,7 +10,10 @@
     "mysql2": "^2.3.3",
     "node": "^19.0.1",
     "razorpay": "^2.8.6",
-    "sequelize": "^6.25.5"
+    "sequelize": "^6.25.5",
+    "sib-api-v3-sdk": "^8.5.0",
+    "uuid": "^9.0.0",
+    "uuid-v4": "^0.1.0"
   },
   "name": "fullstackapp",
   "version": "1.0.0",
@@ -22,5 +27,14 @@
   },
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HawkWolf1/expense-tracker-backend.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/HawkWolf1/expense-tracker-backend/issues"
+  },
+  "homepage": "https://github.com/HawkWolf1/expense-tracker-backend#readme",
   "description": ""
 }

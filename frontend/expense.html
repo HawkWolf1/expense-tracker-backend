@@ -26,9 +26,13 @@
             <button> SUBMIT </button> <br>
             
         </form>
+        
         </p>
         <div id = "premium_user"></div>
-        <button id="Premium1"> Buy Premium Membership </button>
+        <button id="Premium1"> Buy Premium Membership </button> <br>
+        
+        
+
         <script src="https://checkout.razorpay.com/v1/checkout.js"> </script>
         <ul id="listOfExpenses"> </ul>
 
@@ -108,6 +112,30 @@
                     document.getElementById('premium_user').appendChild(b);
                 }
 
+                function download(){
+                    const token = localStorage.getItem('token')
+                    const decodeToken = parseJwt(token)
+                    const isPremiumUser = decodeToken.isPremiumUser
+                    
+                    const a = document.createElement('input')
+                    a.type = 'button'
+                    a.id = 'download'
+                    a.value = 'Download Expenses'
+
+                    if(isPremiumUser){
+                        a.onclick = async() =>{
+                            console.log('download working')
+    
+                            const response = axios.get('http://localhost:4000/user/download', {headers: {'Authorization' : token}})
+
+                            const c = response.data
+                            console.log(c)
+                        }
+                    }
+                    document.body.appendChild(a)
+                }
+                
+
 
 
 
@@ -128,7 +156,9 @@
                     
                     if(isPremiumUser){
                      showPremiumUserMessage()
+                     download()
                      showLeaderboard()
+                     
                     }
                     event.preventDefault()
                     try{
@@ -195,6 +225,8 @@
 
                     parentNode.removeChild(childNodeToBeDeleted)
                 }
+
+
                 
                 document.getElementById("Premium1").onclick = async function(e){
                  
@@ -216,7 +248,9 @@
                             
                              
                             showPremiumUserMessage()
+                            download()
                             showLeaderboard()
+                            
                             localStorage.setItem('token', res.data.token) // It prevents the premium message from loss at frontend
                         
                     }
@@ -232,6 +266,7 @@
                     })
                 }
 
+            
                 
              </script>
         

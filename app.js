@@ -10,6 +10,7 @@ const userRoutes = require('./Routes/user')
 const ETable = require('./models/expenseTable')
 const myTable = require('./models/userTable')
 const OTable = require('./models/orderTable')
+const forgotPassword = require('./models/forgotPTable');
 
 
 app.use(bodyParser.json({extended: false})) 
@@ -22,6 +23,9 @@ ETable.belongsTo(myTable) // we have to put the primary key of user table as a f
 
 myTable.hasMany(OTable)  
 OTable.belongsTo(myTable)
+
+myTable.hasMany(forgotPassword);
+forgotPassword.belongsTo(myTable);
 
 sequelize.sync().then(() => {
     app.listen(4000)

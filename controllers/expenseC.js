@@ -2,6 +2,14 @@ const ETable = require('../models/expenseTable')
 const myTable = require('../models/userTable')
 const sequelize = require('../util/database')
 
+const downloadExpense = async(req,res) => {
+  const expenses = await req.user.getExpenses()
+  console.log(expenses)
+
+
+
+}
+
 const addExpense = async (req, res, next) => {
     const t = await sequelize.transaction()
     const { amount, description, category } = req.body;
@@ -36,28 +44,6 @@ const addExpense = async (req, res, next) => {
   
   
   
-  
-  
-  
-    // try{
-        
-    // const {amount, description, category} = req.body
-
-    // const data = await ETable.create({ 
-    //     amount, 
-    //     description, 
-    //     category,
-    //     ourUserId : req.user.id
-    //  })
-
-    // res.status(201).json({ newExpenseDetail: data })
-    // } 
-    // catch(err){
-    //     res.status(500).json({
-    //         error:(err,'!description')
-    //     })
-    // }
-
 
 
 
@@ -121,6 +107,8 @@ const deleteExpense = async (req, res, next) =>{
 module.exports = {
     addExpense,
     getExpense,
-    deleteExpense
+    deleteExpense,
+    downloadExpense
+    
 }
 

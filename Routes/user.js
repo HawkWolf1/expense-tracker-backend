@@ -7,7 +7,7 @@ const expenseController = require('../controllers/expenseC')
 const userAuthentication = require('../middleware/auth')
 const purchaseController = require('../controllers/purchaseC')
 const premiumLeaderboardController = require('../controllers/premiumFeatureLeaderboard')
-
+const resetpasswordController = require('../controllers/forgotP');
 
 router.post('/user/add-user', userController.addUser)
 router.post('/user/login', userController.loginN)
@@ -21,5 +21,9 @@ router.get('/purchase/premiummembership', userAuthentication.authenticate, purch
 router.post('/purchase/updatetransactionstatus', userAuthentication.authenticate, purchaseController.updateTransactionStatus)
 
 router.get('/premium/showleaderboard', userAuthentication.authenticate, premiumLeaderboardController.fetchUserLeaderBoard)
+
+router.post('/password/forgotpassword', resetpasswordController.forgotMyP)
+
+router.get('/user/download', userAuthentication.authenticate, expenseController.downloadExpense)
 
 module.exports = router
