@@ -6,7 +6,7 @@ const downloadExpense = async(req,res) => {
   const expenses = await req.user.getExpenses()
   console.log(expenses)
 
-
+s
 
 }
 
