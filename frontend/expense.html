@@ -121,17 +121,20 @@
                     a.type = 'button'
                     a.id = 'download'
                     a.value = 'Download Expenses'
+                    
 
-                    if(isPremiumUser){
-                        a.onclick = async() =>{
-                            console.log('download working')
-    
-                            const response = axios.get('http://localhost:4000/user/download', {headers: {'Authorization' : token}})
-
-                            const c = response.data
-                            console.log(c)
+                    if (isPremiumUser) {
+                        a.onclick = async () => {
+                            try {
+                                const response = await axios.get('http://localhost:4000/user/download', { headers: { 'Authorization': token } });
+                                const fileUrl = response.data.fileUrl;
+                                window.open(fileUrl, '_blank');
+                            } catch (error) {
+                                console.log('Error:', error.message);
+                            }
                         }
                     }
+           
                     document.body.appendChild(a)
                 }
                 

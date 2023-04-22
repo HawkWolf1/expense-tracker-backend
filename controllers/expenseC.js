@@ -1,14 +1,69 @@
 const ETable = require('../models/expenseTable')
 const myTable = require('../models/userTable')
 const sequelize = require('../util/database')
+const AWS = require('aws-sdk')
+
+
+
+
+function uploadToS3(data, filename){
+  console.log('filename:', filename)
+  const BUCKET_NAME = 'expensetracker77';
+  const IAM_USER_KEY = 'AKIA4SOW2FQH44Y2V6UN';
+  const IAM_USER_SECRET = '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';
+
+  let s3bucket = new AWS.S3({
+    accessKeyId: IAM_USER_KEY,
+    secretAccessKey: IAM_USER_SECRET
+
+  })
+    const params ={
+      Bucket: BUCKET_NAME,
+      Key: filename,
+      Body: data,
+      ACL: 'public-read'
+    }
+
+    return new Promise((resolve, reject) =>{
+      s3bucket.upload(params, (err, s3response) => {
+        if(err){
+          console.log('something wrong', err)
+          reject(err)
+        }
+        else{
+          // console.log('success', s3response)
+          resolve(s3response.Location)
+        }
+    })
+      }  
+
+    )}
+    
+  
+
 
 const downloadExpense = async(req,res) => {
+  try{
   const expenses = await req.user.getExpenses()
   console.log(expenses)
 
-s
+  const stringifiedExpenses = JSON.stringify(expenses) // only a string could be added to the file
 
+  const userId = req.user.id
+  const filename = `ETable${userId}/${new Date}.txt`
+  console.log('filename:', filename)
+  const fileUrl = await uploadToS3(stringifiedExpenses, filename)
+  res.status(200).json({fileUrl, success:true})
+  }
+  catch(error){
+    console.log(error)
+    res.status(500).json({ success: false, message: 'Error downloading expenses' })
+  }
 }
+
+
+
+
 
 const addExpense = async (req, res, next) => {
     const t = await sequelize.transaction()
