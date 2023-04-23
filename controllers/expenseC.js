@@ -3,14 +3,14 @@ const myTable = require('../models/userTable')
 const sequelize = require('../util/database')
 const AWS = require('aws-sdk')
 
-
+require('dotenv').config() 
 
 
 function uploadToS3(data, filename){
   console.log('filename:', filename)
   const BUCKET_NAME = 'expensetracker77';
-  const IAM_USER_KEY = 'AKIA4SOW2FQH44Y2V6UN';
-  const IAM_USER_SECRET = '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';
+  const IAM_USER_KEY = process.env.AWS_USER_KEY;
+  const IAM_USER_SECRET = process.env.AWS_USER_SECRET;
 
   let s3bucket = new AWS.S3({
     accessKeyId: IAM_USER_KEY,
@@ -103,9 +103,22 @@ const addExpense = async (req, res, next) => {
 
 
 const getExpense = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1; 
+  const itemsPerPage = parseInt(req.query.itemsPerPage) || 5
     try {
-        const expense = await req.user.getExpenses()
-        res.status(200).json({ ex: expense })
+        const totalCount = await req.user.countExpenses()
+        const expense = await req.user.getExpenses(
+          {
+            offset: (page - 1) * itemsPerPage,
+            limit: itemsPerPage
+          }
+        )
+        const totalPages = Math.ceil(totalCount / itemsPerPage)
+        res.status(200).json({ 
+          ex: expense, 
+          totalCount,
+          totalPages })
+          
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
         res.status(500).json({ error: 'err' })
