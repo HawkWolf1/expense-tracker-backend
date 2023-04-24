@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express() 
 
+
 const sequelize = require('./util/database')
 const userRoutes = require('./Routes/user')
  
@@ -16,6 +17,7 @@ const forgotPassword = require('./models/forgotPTable');
 app.use(bodyParser.json({extended: false})) 
 app.use(cors()) 
 app.use(userRoutes) 
+
 
 
 myTable.hasMany(ETable)  // these 2 lines are for establishing the relation between the usertable and expensetable.

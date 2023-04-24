@@ -157,25 +157,120 @@
                     const isPremiumUser = decodeToken.isPremiumUser
                     
                     if(isPremiumUser){
-                     showPremiumUserMessage()
-                     
+                     showPremiumUserMessage()                    
                      showLeaderboard()
-                     download()
-                     
+                     download()                   
                     }
-                    event.preventDefault()
-                    try{
-                    const xyz = await axios.get("http://localhost:4000/expense/get-expense", {headers: {'Authorization' : token}})
-                    console.log(xyz)
-                    for(var i=0; i<xyz.data.ex.length; i++){                       
-                             showNewUserOnScreen(xyz.data.ex[i])
+                    const itemsPerPage = 5;
+                    const expensesList = document.getElementById("listOfExpenses");
+                    const paginationDiv = document.createElement("div");
+                    paginationDiv.setAttribute("id", "paginationDiv");
+                    
+                    const totalExpenses = expensesList.children.length
+                    
+                    let currentPage = 1;
+
+                    const showItemsPerPage = (data) => {
+                        const startIndex = (currentPage - 1) * itemsPerPage;
+                        const endIndex = Math.min(startIndex + itemsPerPage, totalExpenses);
+    
+
+                        for (let i = 0; i < totalExpenses; i++) {
+                            if (i >= startIndex && i < endIndex) {
+                                expensesList.children[i].style.display = "block";
+                            } else {
+                                expensesList.children[i].style.display = "none";
+                            }
+                        }
+                        console.log(`Items per page shown: page ${currentPage}`);
+                    };
+                    
+
+                    const showPreviousPage = () => {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            showItemsPerPage();
+                            console.log("Previous button clicked.");
+                        }
+                    };
+                    const totalPages = Math.ceil(totalExpenses / itemsPerPage)
+                    const showNextPage = () => {
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            showItemsPerPage();
+                            console.log("Next button clicked.");
+                        }
+                    };
+
+                    event.preventDefault();
+                    try {
+                        const xyz = await axios.get(`http://localhost:4000/expense/get-expense?page=${currentPage}&limit=${itemsPerPage}`, { headers: { 'Authorization': token } })
+                        console.log(xyz)
+                        for (var i = 0; i < xyz.data.ex.length; i++) {
+                            showNewUserOnScreen(xyz.data.ex[i])
                     }
-                }
-                    catch(err){                       
-                        console.log("Error Block: ",err)
-                    }
-                  
+
+                    const totalExpenses = expensesList.children.length;
+                    
+                    const totalPages = Math.ceil(totalExpenses / itemsPerPage);
+
+                    showItemsPerPage();
+
+                    paginationDiv.innerHTML = `
+                    <button id="prevButton">Prev</button>
+                    <button id="nextButton">Next</button>
+                    `;
+
+                    expensesList.insertAdjacentElement("afterend", paginationDiv)
+
+                    const prevButton = document.getElementById("prevButton");
+                    const nextButton = document.getElementById("nextButton");
+
+                    prevButton.addEventListener("click", () => {
+                        currentPage--
+                        showItemsPerPage(currentPage)
+                        console.log("Previous button clicked.");
+                });
+                    
+                    nextButton.addEventListener("click", () => {
+                        currentPage++;
+                        showItemsPerPage(currentPage);
+                    console.log("Next button clicked.");
                 })
+                
+
+                    }catch(err){                       
+                    console.log("Error Block: ",err)
+                   }
+  
+                   })
+ 
+
+                // window.addEventListener("DOMContentLoaded", async(event) => {
+                //     const token = localStorage.getItem('token')
+                //     const decodeToken = parseJwt(token)
+                //     const isPremiumUser = decodeToken.isPremiumUser
+                    
+                //     if(isPremiumUser){
+                //      showPremiumUserMessage()                    
+                //      showLeaderboard()
+                //      download()                   
+                //     }
+                    
+                //     event.preventDefault()
+                //     try{
+                //     const xyz = await axios.get(`http://localhost:4000/expense/get-expense`, {headers: {'Authorization' : token}})
+                //     console.log(xyz)
+                //     for(var i=0; i<xyz.data.ex.length; i++){                       
+                //              showNewUserOnScreen(xyz.data.ex[i])
+                //     }
+                    
+                // }
+                //     catch(err){                       
+                //         console.log("Error Block: ",err)
+                //     }
+                  
+                // })
 
 
                 
