@@ -14,7 +14,7 @@ router.post('/user/login', userController.loginN)
 
 
 router.post('/expense/add-expense', userAuthentication.authenticate, expenseController.addExpense)
-router.get('/expense/get-expense?page=${currentPage}&pageSize=${pageSize}', userAuthentication.authenticate, expenseController.getExpense)
+router.get('/expense/get-expense', userAuthentication.authenticate, expenseController.getExpense)
 router.delete('/expense/delete-expense/:id', userAuthentication.authenticate, expenseController.deleteExpense)
 
 router.get('/purchase/premiummembership', userAuthentication.authenticate, purchaseController.purchasePremium)

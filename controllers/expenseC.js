@@ -97,29 +97,11 @@ const addExpense = async (req, res, next) => {
   };
 
   
-  
-  
-
-
 
 const getExpense = async (req, res, next) => {
-  const page = parseInt(req.query.page) || 1; 
-  const limit = parseInt(req.query.limit) || 5;
-  const skip = (page - 1) * limit;
     try {
-      const expenses = await ETable.find()
-      .sort({ date: -1 })
-      .skip(skip)
-      .limit(limit)
-      .exec();
-
-    const count = await ETable.countDocuments().exec();
-    const totalPages = Math.ceil(count / pageSize);
-        res.status(200).json({ 
-          ex: expenses,
-          totalPages: totalPages,
-          currentPage: page })
-
+        const expense = await req.user.getExpenses()
+        res.status(200).json({ ex: expense })
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
         res.status(500).json({ error: 'err' })
