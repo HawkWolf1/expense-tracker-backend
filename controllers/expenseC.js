@@ -96,45 +96,19 @@ const addExpense = async (req, res, next) => {
     }
   };
 
+
   
-
-const getExpense = async (req, res, next) => {
+  const getExpense = async (req, res, next) => {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 5;
-      const startIndex = (page - 1) * limit;
-      const endIndex = page * limit;
-
-      const expenses = await req.user.getExpenses();
-      const totalExpenses = expenses.length;
-      const totalPage = Math.ceil(totalExpenses / limit);
-
-      const results = {};
-
-      if (endIndex < totalExpenses) {
-        results.next = {
-            page: page + 1,
-            limit: limit,
-        };
-    }
-
-    if (startIndex > 0) {
-      results.previous = {
-          page: page - 1,
-          limit: limit,
-      };
-  }
-
-  results.currentPage = page;
-  results.totalPages = totalPage;
-  results.ex = expenses.slice(startIndex, endIndex);
-  res.status(200).json(results);
-
+        const expense = await req.user.getExpenses()
+        res.status(200).json({ ex: expense })
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
         res.status(500).json({ error: 'err' })
     }
 }
+
+
 
 
 
