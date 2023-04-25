@@ -97,7 +97,8 @@ const addExpense = async (req, res, next) => {
   };
 
 
-  
+
+
   const getExpense = async (req, res, next) => {
     try {
         const expense = await req.user.getExpenses()
@@ -107,6 +108,45 @@ const addExpense = async (req, res, next) => {
         res.status(500).json({ error: 'err' })
     }
 }
+
+
+// const getExpense = async (req, res, next) => {
+//   try {
+//       const page = parseInt(req.query.page);
+//       const items_per_page = parseInt(req.query.items_per_page);
+//       let total = 0;
+      
+//       const expenses = await req.user.getExpenses();
+
+//       for (let i = 0; i < expenses.length; i++) {
+//           total = total + expenses[i].amount;
+//         }
+    
+//       const totalItems = expenses.length;
+
+//       const result = await req.user.getExpenses({
+//           offset: (page - 1) * items_per_page,
+//           limit: items_per_page,
+//         });
+
+//         res.json({
+//           result,
+//           isPremium: req.user.premiumUser,
+//           currentPage: page,
+//           hasNextPage: page * items_per_page < totalItems,
+//           hasPreviousPage: page > 1,
+//           nextPage: page + 1,
+//           previousPage: page - 1,
+//           lastPage: Math.ceil(totalItems / items_per_page),
+//           total,
+//         });
+
+
+//   } catch (error) {
+//       console.log('Get user is failing', JSON.stringify(error))
+//       res.status(500).json({ error: 'err' })
+//   }
+// }
 
 
 
@@ -128,7 +168,6 @@ const deleteExpense = async (req, res, next) =>{
             ourUserId: req.user.id
           }
         })
-
         const totalExpenses = await ETable.sum('amount', {
           where: { ourUserId: req.user.id }
         })
@@ -144,15 +183,11 @@ const deleteExpense = async (req, res, next) =>{
          if (RowD ===0){
             return res.status(404).json({success: false, message: 'expense doesnot belong to the user'})
          }
-        res.sendStatus(200)
-        
-        
-        
+        res.sendStatus(200)                 
     }catch (err) {
                 console.log('Not working', JSON.stringify(err))
                 res.status(500).json(err)
-            }
-        
+            }        
 }
 
 
