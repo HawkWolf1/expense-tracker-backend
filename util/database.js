@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize')
 
-const sequelize = new Sequelize('practise', 'root', 'Bucketone23@', {
+require('dotenv').config() 
+
+const sequelize = new Sequelize('practise', 'root', process.env.GIT_PWD, {
     dialect: 'mysql',
     host: 'localhost'
 })

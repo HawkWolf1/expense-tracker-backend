@@ -145,3 +145,15 @@ window.addEventListener("DOMContentLoaded", async(event) => {
     }
   
 })
+
+
+
+
+
+// // # TOKEN_SECRET =
+// RAZORPAY_KEY_ID=rzp_test_KejApkBrX7U9oC
+// RAZORPAY_KEY_SECRET=XBBD0VRiMREsDkY4Llr3HuUX
+
+// AWS_USER_KEY=AKIA4SOW2FQHTQ6MYZXF
+// AWS_USER_SECRET=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
+
