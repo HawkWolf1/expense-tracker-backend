@@ -47,7 +47,7 @@ function generateAccessToken(id, name, isPremiumUser){
 const loginN = async (req, res, next) => {
     try{
     const {email, password} = req.body
-
+    
     const xyz = await myTable.findAll({where :{email}})
         if(xyz.length >0){
             bcrypt.compare(password, xyz[0].password, (err,result) => {

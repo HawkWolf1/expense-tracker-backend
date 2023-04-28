@@ -5,7 +5,9 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 
-const helmet  =require('helmet')
+app.use(cors()) 
+
+// const helmet  =require('helmet')
 const compression =require('compression')
 const morgan = require('morgan')
 
@@ -25,11 +27,11 @@ const accessLogStream = fs.createWriteStream(
 )
 
 app.use(bodyParser.json({extended: false})) 
-app.use(cors()) 
+
 app.use(userRoutes) 
 
 
-app.use(helmet())
+// app.use(helmet())
 app.use(compression())
 app.use(morgan('combined', {stream: accessLogStream}))
 
