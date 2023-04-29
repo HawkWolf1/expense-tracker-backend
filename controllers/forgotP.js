@@ -24,7 +24,10 @@ const forgotMyP = async (req, res) => {
         const user = await myTable.findOne({where : { email }});
         if(user){
             const id = uuid.v4();
-            await forgotPassword.create({ id , active: true })
+            await forgotPassword.create({ id , 
+                active: true,
+                ourUserId: user.id })
+
                 .catch(err => {
                     throw new Error(err)
                 })
@@ -35,7 +38,7 @@ const forgotMyP = async (req, res) => {
                 to: [{email: email}],
                 subject: 'Forgot password',
                 textContent:'Reset your password here',
-                html: `<a href="http://localhost:4000/password/resetpassword/${id}">Reset password</a>`
+                htmlContent: `<a href="http://localhost:4000/password/resetpassword/${id}">Reset password</a>`
             }  
            
             await tranEmailApi.sendTransacEmail(content);   
@@ -49,84 +52,68 @@ const forgotMyP = async (req, res) => {
         }
       }
 
+    
 
-
+      
       const resetMyP = async (req, res) => {
-        try {
-            console.log('1')
-            const { newpassword } = req.query;
-            console.log('12')
-            const { resetpasswordid } = req.params;
-            console.log('13')
-            forgotPassword.findOne({ where : { id: resetpasswordid }}).then(resetpasswordrequest => {
-                console.log('14')
-                myTable.findOne({where: { id : resetpasswordrequest.userId}}).then(user => {
-                    console.log('15')
-                    // console.log('userDetails', user)
-                    if(user) {
-                        console.log('16')
-                        //encrypt the password
-    
-                        const saltRounds = 10;
-                        bcrypt.genSalt(saltRounds, function(err, salt) {
-                            if(err){
-                                console.log(err);
-                                throw new Error(err);
-                            }
-                            bcrypt.hash(newpassword, salt, function(err, hash) {
-                                // Store hash in your password DB.
-                                if(err){
-                                    console.log(err);
-                                    throw new Error(err);
-                                }
-                                myTable.update({ password: hash }).then(() => {
-                                    res.status(201).json({message: 'Successfuly update the new password'})
-                                })
-                            });
-                        });
-                } else{
-                    return res.status(404).json({ error: 'No user Exists', success: false})
+        const id =  req.params.id;
+       
+        try{
+            forgotPwd = await forgotPassword.findOne({ where : { id }})
+            if (forgotPwd){
+                if (forgotPwd.dataValues.active){          
+                    res.status(201).send(`<html>
+                                                        <form action="/password/updatepassword/${id}" method="get">
+                                                            <label for="newPassword">Enter New password</label>
+                                                            <input name="newPassword" type="password" id="newPassword" required></input>
+                                                            <button>Reset password</button>
+                                                        </form>
+                                                    </html>`
+                    )                  
                 }
-                })
-            })
-        } catch(error){
-            return res.status(403).json({ error, success: false } )
+            }else{
+                throw new Error('Wrong link')
+            }
+        }catch(error){
+           return res.status(400).json({success:false, error: error.message})
         }
-    
     }
-    //   const resetMyP = (req, res) => {
-    //     console.log('1')
-    //     const {id} =  req.params;
-    //     console.log('12')
-    //     forgotPassword.findOne({ where : { id }}).then(forgotPasswordrequest => {
-    //         console.log('123')
-    //         if(forgotPasswordrequest){
-    //             console.log('1234')
-    //             forgotPasswordrequest.update({ active: false});
-    //             res.status(200).send(`<html>
-    //                                     <script>
-    //                                         function formsubmitted(e){
-    //                                             e.preventDefault();
-    //                                             console.log('called')
-    //                                         }
-    //                                     </script>
-    //                                     <form action="/password/updatepassword/${id}" method="get">
-    //                                         <label for="newpassword">Enter New password</label>
-    //                                         <input name="newpassword" type="password" required></input>
-    //                                         <button>reset password</button>
-    //                                     </form>
-    //                                 </html>`
-    //                                 )
-    //             return res.end()
+  
     
-    //         }
-    //     })
-    // }
-    
+
+
+    const updateMyP = async (req, res) => {
+        const id = req.params.id;
+        const { newPassword } = req.query;
+      
+        try {
+          const forgotPwd = await forgotPassword.findOne({ where: { id } });
+          if (forgotPwd && forgotPwd.dataValues.active) {
+            const user = await myTable.findByPk(forgotPwd.ourUserId);
+            if (user) {
+                const salt = await bcrypt.genSalt(10)
+                const hashedPassword = await bcrypt.hash(newPassword, salt)
+                    
+              await user.update({ password: hashedPassword });
+              await forgotPwd.update({ active: false });
+              return res.status(200).json({ success: true, message: 'Password updated successfully' });
+
+         } else {
+              throw new Error('User not found');
+            }
+          } else {
+            throw new Error('Invalid or expired link');
+          }
+        } catch (error) {
+          return res.status(400).json({ success: false, error: error.message });
+        }
+      }
 
 
 
 module.exports = {
     forgotMyP,
-    resetMyP
+    resetMyP,
+    updateMyP
 }
+

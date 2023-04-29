@@ -30,7 +30,9 @@ router.post('/purchase/updatetransactionstatus', userAuthentication.authenticate
 router.get('/premium/showleaderboard', userAuthentication.authenticate, premiumLeaderboardController.fetchUserLeaderBoard)
 
 router.post('/password/forgotpassword', resetpasswordController.forgotMyP)
-router.post('/password/resetpassword', resetpasswordController.resetMyP)
+router.get('/password/resetpassword/:id', resetpasswordController.resetMyP)
+router.get('/password/updatepassword/:id', resetpasswordController.updateMyP)
+
 
 router.get('/user/download', userAuthentication.authenticate, expenseController.downloadExpense)
 

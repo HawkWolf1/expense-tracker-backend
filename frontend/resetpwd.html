@@ -47,7 +47,7 @@
                     try{
                         console.log('3333')
                         const resetP = { id: id, password: password1 };
-                        const ddd= await axios.post('http://localhost:4000/password/resetpassword', resetP) 
+                        const ddd= await axios.post(`http://localhost:4000/password/resetpassword/${id}`, resetP) 
                         console.log('xxxx')
                         alert(ddd.data.message)
                         console.log('eeeeeee')

@@ -34,8 +34,8 @@
                 alert(ccc.data.message)
                 console.log(ccc.data.message)
                 if (ccc.status === 202){   
-                    window.location.href = "./resetpwd.html"
-                    console.log('222222222')
+                    document.body.innerHTML = document.body.innerHTML + "<h3 style='color:blue'> Mail sent successfully!!! </h3>"
+                    
                         } else {
                             throw new Error('Something is wrong!')
                         }               
