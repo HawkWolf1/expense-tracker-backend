@@ -100,53 +100,25 @@ const addExpense = async (req, res, next) => {
 
 
   const getExpense = async (req, res, next) => {
+    const page = Number(req.query.page)-1
+    const items = Number(req.query.items)
+    console.log('1')
+    console.log(req.user.id)
+    console.log(page, items, req.user)
     try {
-        const expense = await req.user.getExpenses()
+        const expense = await ETable.findAndCountAll({
+          where: {ourUserId : req.user.id}, 
+          offset: (page)*items,
+          limit: items
+        })
+        console.log('12')
+        console.log(expense)
         res.status(200).json({ ex: expense })
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
         res.status(500).json({ error: 'err' })
     }
 }
-
-
-// const getExpense = async (req, res, next) => {
-//   try {
-//       const page = parseInt(req.query.page);
-//       const items_per_page = parseInt(req.query.items_per_page);
-//       let total = 0;
-      
-//       const expenses = await req.user.getExpenses();
-
-//       for (let i = 0; i < expenses.length; i++) {
-//           total = total + expenses[i].amount;
-//         }
-    
-//       const totalItems = expenses.length;
-
-//       const result = await req.user.getExpenses({
-//           offset: (page - 1) * items_per_page,
-//           limit: items_per_page,
-//         });
-
-//         res.json({
-//           result,
-//           isPremium: req.user.premiumUser,
-//           currentPage: page,
-//           hasNextPage: page * items_per_page < totalItems,
-//           hasPreviousPage: page > 1,
-//           nextPage: page + 1,
-//           previousPage: page - 1,
-//           lastPage: Math.ceil(totalItems / items_per_page),
-//           total,
-//         });
-
-
-//   } catch (error) {
-//       console.log('Get user is failing', JSON.stringify(error))
-//       res.status(500).json({ error: 'err' })
-//   }
-// }
 
 
 
