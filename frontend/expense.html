@@ -36,6 +36,15 @@
         <ul id="listOfExpenses"> </ul>
 
         <span id = "pagination"></span>
+        
+        <label for="items">Items</label>
+        <select id="items" name="items">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        </select>
 
  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
@@ -150,13 +159,38 @@
                     return JSON.parse(jsonPayload);
                 }
 
+
+
                 let parentNode= document.getElementById('listOfExpenses')
                 let pagination= document.getElementById('pagination')
+                let itemsDropdown = document.getElementById("items");
+
+                
+                itemsDropdown.addEventListener("change", async (e) => {
+                    const token = localStorage.getItem('token')
+                    
+                    const pageNo = 1
+                    let items = e.target.value;
+                    localStorage.setItem('items', items )
+                    e.preventDefault()
+
+                    
+                    A(pageNo, items, token)
+                    
+                })
+
+
+
 
                 window.addEventListener("DOMContentLoaded", async(event) => {
                     const token = localStorage.getItem('token')
                     const decodeToken = parseJwt(token)
                     const isPremiumUser = decodeToken.isPremiumUser
+
+                    const pageNo =1
+                    let items = localStorage.getItem('items' )
+                    itemsDropdown.value = items
+                    
                     
                     if(isPremiumUser){
                      showPremiumUserMessage()
@@ -164,46 +198,27 @@
                      download()
                     }
                     event.preventDefault()
-                    try{
-                    const pageNo =1
-                    const items = 5
-
-                    const xyz = await axios.get(`http://localhost:4000/expense/get-expense?page=${pageNo}&items=${items}`, {headers: {'Authorization' : token}})
-                    console.log(xyz)
-                    for(var i=0; i<xyz.data.ex.rows.length; i++){                       
-                             showNewUserOnScreen(xyz.data.ex.rows[i])
-               }
-                    if(pageNo){
-                        pagination.innerHTML = `<button> ${pageNo} </button>`
-                    }
-                    if(xyz.data.ex.count > (pageNo*items)){
-                        pagination.innerHTML += `<button> ${pageNo+1} </button>`
-                    }
-                    if(pageNo>1){
-                        pagination.innerHTML = `<button> ${pageNo-1} </button>`+ listOfExpenses.innerHTML
-                    }
-                }
-                    catch(err){                       
-                        console.log("Error Block: ",err)
-                    }
-                  
+                    
+                    A(pageNo, items, token)
                 })
 
 
 
 
-
-
-
-
-                pagination.addEventListener('click', async(e) =>{
-                    // updatePagination(e)
+                pagination.addEventListener('click', (e) =>{
                     e.preventDefault()
-                    // console.log(e.target.textContent.trim())
-                    try{
                     const token = localStorage.getItem('token')
                     const pageNo = Number(e.target.textContent.trim())
-                    const items = 5
+                    const items = localStorage.getItem('items')
+                
+                    A(pageNo, items, token)
+                })
+                    
+                
+
+
+                async function A(pageNo, items, token){
+                    try{
 
                     const xyz = await axios.get(`http://localhost:4000/expense/get-expense?page=${pageNo}&items=${items}`, {headers: {'Authorization' : token}})
                     console.log(xyz)
@@ -213,8 +228,7 @@
                              showNewUserOnScreen(xyz.data.ex.rows[i])
                }
                
-            
-               console.log(pagination,pagination.innerHTML )
+                    
                     if(pageNo){
                         pagination.innerHTML = `<button> ${pageNo} </button>`
                     }
@@ -228,11 +242,8 @@
                     catch(err){                       
                         console.log("Error Block: ",err)
                     }
-                })
-                
-                
-                
-                
+                }
+            
 
 
 

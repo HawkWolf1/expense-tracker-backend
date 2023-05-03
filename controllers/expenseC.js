@@ -97,22 +97,21 @@ const addExpense = async (req, res, next) => {
   };
 
 
-
+  
 
   const getExpense = async (req, res, next) => {
     const page = Number(req.query.page)-1
     const items = Number(req.query.items)
     console.log('1')
-    console.log(req.user.id)
-    console.log(page, items, req.user)
     try {
         const expense = await ETable.findAndCountAll({
           where: {ourUserId : req.user.id}, 
           offset: (page)*items,
           limit: items
         })
-        console.log('12')
+        
         console.log(expense)
+        console.log('12')
         res.status(200).json({ ex: expense })
     } catch (error) {
         console.log('Get user is failing', JSON.stringify(error))
