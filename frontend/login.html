@@ -1,12 +1,15 @@
 <html>
     <head>
+        <link rel="stylesheet" href="login.css">
         <style>
             h3{text-align: center;}
             p{text-align: center;}
 
         </style>
         <h3> LOGIN PAGE </h3>
-        <body>
+    </head>
+    
+    <body>
     
     <form onsubmit="login(event)">
     <p><label> EMAIL </label>
@@ -15,54 +18,21 @@
     <label> PASSWORD </label>
     <input id="password" type="password" name="password" size="50" ><br>
 
-    <button> LOGIN </button>
+    <button class="login-button"> LOGIN </button>
 </form>
    
 </p>
-<a href = "./signup.html"> New User - SIGN UP</a> <br>
+<a href = "./signup.html"> NEW USER - SIGN UP</a> <br>
 <br>
-<button onclick="window.location.href='./forgotpwd.html'"> FORGOT PASSWORD </button>
+<p> <button class="forgot-button" onclick="window.location.href='./forgotpwd.html'"> FORGOT PASSWORD </button> </p>
 
 <ul id="wholeList"> </ul>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
-
-<script>
-async function login(event){
-        event.preventDefault()
-        const email = document.getElementById('email').value
-        const password = document.getElementById('password').value
-
-            const loginD = {
-                email,
-                password
-            }
-            console.log(loginD)
-            try{
-                const pqr = await axios.post("http://localhost:4000/user/login", loginD) 
-                console.log(pqr)
-                alert(pqr.data.message)
-                if (pqr.status === 200){     
-                        localStorage.setItem('token', pqr.data.token)                      
-                         window.location.href = "./expense.html"
-                        } else {
-                            throw new Error('Unable to log you in!')
-                        }
-                
-            }
-                       
-            catch(err){
-                console.log(JSON.stringify(err))
-                document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> We have an Error!!! </h3>"
-                
-            }                  
-                }
-
-</script>
-
+<script src=login.js></script>
 
 
 
 </body>
-</head>
+
 </html>

@@ -1,13 +1,17 @@
 <html>
     <head>
+        <link rel="stylesheet" href="signup.css">
+        <title> Sign Up Page </title>
         <style>
             h3{text-align: center;}
             p{text-align: center;}
 
         </style>
-        <h3> SIGN UP PAGE </h3>
-        <body>
 
+    </head>
+    
+        <body>
+        <h3> SIGN UP PAGE </h3>
         <form onsubmit="newF(event)">
         <p> <label>NAME</label>
             <input id="name" type="text" name="name" required size="50" ><br>
@@ -21,45 +25,15 @@
             <button> SIGN UP </button>
         </form>
         </p>
-        <a href = "./login.html"> Existing User - LOGIN</a>
+        <a href = "./login.html"> EXISTING USER - LOGIN</a>
         <ul id="listOfUsers"> </ul>
 
  
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>        
+        <script src=signup.js></script>
 
-
-
-            <script>
-                async function newF(event){
-                    event.preventDefault()
-                    const name = document.getElementById('name').value
-                    const email = document.getElementById('email').value
-                    const password = document.getElementById('password').value
-
-                    const myObject = {
-                        name,
-                        email,
-                        password
-                    }
-                    try{
-                        const abc = await axios.post("http://localhost:4000/user/add-user", myObject) 
-                        if (abc.status === 201){
-                            
-                            window.location.href = "./login.html"
-                        } else {
-                            throw new Error('Unable to Sign you Up')
-                        }
-                    }
-                       
-                    catch(err){
-                        document.body.innerHTML = document.body.innerHTML + "<h3 style='color:red'> Something went wrong!!! </h3>"
-                        console.log("Error Block: ",err)
-                    }                  
-            }
-               
-                
-             </script>
+        
         
         </body>
-    </head>
+    
 </html>
