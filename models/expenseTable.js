@@ -3,34 +3,24 @@ const Sequelize = require('sequelize')
 const sequelize = require('../util/database')
 
 
-const userTable = sequelize.define('ourUser', {
+const expenseTable = sequelize.define('expense', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     
-    name: {
-        type: Sequelize.STRING,
+    amount: {
+        type: Sequelize.INTEGER,
     },
     
-    email: {
+    description: {
         type: Sequelize.STRING,
         unique: true
 
     },
-    password: {
+    category: {
         type: Sequelize.STRING,
-        
-    },
-    isPremiumUser: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-        
-    },
-    totalExpenses:{
-        type: Sequelize.INTEGER,
-        defaultValue: 0
     }
 },
 {
@@ -38,4 +28,4 @@ const userTable = sequelize.define('ourUser', {
 }
 )   
 
-module.exports = userTable
+module.exports = expenseTable

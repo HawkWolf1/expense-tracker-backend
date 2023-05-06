@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <style>
+            h3{text-align: center;}
+            p{text-align: center;}
+
+        </style>
+        <h3> RESET PASSWORD! </h3>
+
+    </head>
+        <body>
+
+        <form onsubmit="resetPassword(event)">
+        <p> <label>New Password</label>
+            <input id="password" type="password" name="password" required size="50" ><br>
+
+
+
+            <label>Confirm New Password</label>
+            <input id="resetpassword" type="password" name="resetpassword" required size="50" ><br>
+
+            <button> RESET PASSWORD </button>
+        </form>
+        </p>
+
+        <a href = "./login.html"> Existing User - LOGIN</a>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <script src=resetpwd.js></script>
+  
+        
+        </body>
+    
+</html>

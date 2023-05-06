@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="expense.css">
+        <style>
+            h3{text-align: center;}
+            p{text-align: center;}
+
+        </style>
+        <h3> EXPENSE TRACKER </h3>
+        <body>
+
+        <form onsubmit="saveToLocalStorage(event)">
+        <p> <label>AMOUNT</label>
+            <input id="amount" type="number" name="amount" size="50" ><br>
+
+            <label> DESCRIPTION</label>
+            <input id="description" type="text" name="description" size="50" ><br>
+
+            <label> CATEGORY </label>
+            <select name="category" id="category">
+                <option value = 'fuel'>fuel</option>
+                <option value = 'food'>food</option>
+                <option value = 'vacation'>vacation</option>
+                <option value = 'shopping'>shopping</option>
+            </select><br>
+
+            <button class="submit-button"> SUBMIT </button> <br>
+            
+        </form>
+        
+        </p>
+        <div id = "premium_user"></div>
+        <p><button id="Premium1" class="premium-button"> Buy Premium Membership </button> <br></p>
+   
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"> </script>
+        <ul id="listOfExpenses"> </ul>
+
+        <span id = "pagination"></span>
+        
+        
+        <div id="itemsP" style="display: inline-block;"></div>
+        <label for="items">   </label>
+        <select id="items" name="items">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+        </select>
+    </div>
+
+ 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <script src=expense.js></script>
+
+
+        </body>
+    </head>
+</html>
