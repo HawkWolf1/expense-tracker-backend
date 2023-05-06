@@ -2,7 +2,6 @@ async function newF(event){
     event.preventDefault()
     const name = document.getElementById('name').value
     const email = document.getElementById('email').value
-    const phone = document.getElementById('phone').value
     const password = document.getElementById('password').value
 
     const myObject = {
