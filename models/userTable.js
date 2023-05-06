@@ -19,19 +19,16 @@ const userTable = sequelize.define('ourUser', {
         unique: true
 
     },
+    phoneNo: {
+        type: Sequelize.STRING,
+        unique: true
+
+    },
     password: {
         type: Sequelize.STRING,
         
-    },
-    isPremiumUser: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-        
-    },
-    totalExpenses:{
-        type: Sequelize.INTEGER,
-        defaultValue: 0
     }
+    
 },
 {
     timestamps: false
