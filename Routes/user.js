@@ -2,12 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-// //limiter is being added becasue getting error 429(too many requests)
-// const rateLimit = require("express-rate-limit");
-// const limiter = rateLimit({
-//     windowMs: 5 * 60 * 1000, // 15 minutes
-//     max: 15, // limit each IP to 100 requests per windowMs
-//   });
 
 const userController = require('../controllers/userC')
 const expenseController = require('../controllers/expenseC')

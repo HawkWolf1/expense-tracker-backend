@@ -7,13 +7,15 @@ const path = require('path')
 
 app.use(cors()) 
 
-// const helmet  =require('helmet')
+const helmet  =require('helmet')
 const compression =require('compression')
 const morgan = require('morgan')
 
 
-const sequelize = require('./util/database')
+// const sequelize = require('./util/database')
 const userRoutes = require('./Routes/user')
+
+const mongoConnect = require('./util/database')
  
 
 const ETable = require('./models/expenseTable')
@@ -37,16 +39,17 @@ app.use(morgan('combined', {stream: accessLogStream}))
 
 
 
-myTable.hasMany(ETable)  // these 2 lines are for establishing the relation between the usertable and expensetable.
-ETable.belongsTo(myTable) // we have to put the primary key of user table as a foriegn key in expense table.
+// myTable.hasMany(ETable) 
+// ETable.belongsTo(myTable) 
 
-myTable.hasMany(OTable)  
-OTable.belongsTo(myTable)
+// myTable.hasMany(OTable)  
+// OTable.belongsTo(myTable)
 
-myTable.hasMany(forgotPassword);
-forgotPassword.belongsTo(myTable);
+// myTable.hasMany(forgotPassword);
+// forgotPassword.belongsTo(myTable);
 
-sequelize.sync().then(() => {
+
+mongoConnect(client =>{
+    console.log(client)
     app.listen(4000)
 })
-.catch((err) => console.log(err))
