@@ -49,7 +49,6 @@ app.use(morgan('combined', {stream: accessLogStream}))
 // forgotPassword.belongsTo(myTable);
 
 
-mongoConnect(client =>{
-    console.log(client)
+mongoConnect(() =>{
     app.listen(4000)
 })
