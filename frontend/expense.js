@@ -176,9 +176,10 @@ async function A(pageNo, items, token){
     const xyz = await axios.get(`http://localhost:4000/expense/get-expense?page=${pageNo}&items=${items}`, {headers: {'Authorization' : token}})
     console.log(xyz)
     parentNode.innerHTML = ''
-    for(var i=0; i<xyz.data.ex.rows.length; i++){     
+    for(var i=0; i<xyz.data.ex.expense.length; i++){     
                         
-             showNewUserOnScreen(xyz.data.ex.rows[i])
+             showNewUserOnScreen(xyz.data.ex.expense[i])
+            //  console.log(xyz.data.ex)
 }
 
     
@@ -201,9 +202,9 @@ async function A(pageNo, items, token){
 
 
 function showNewUserOnScreen(user){  
-    const childHTML = `<li id=${user.id}> ${user.amount} - ${user.description} - ${user.category} 
-                        <button  class="delete-btn" onclick =deleteExpense('${user.id}')> Delete  </button>  
-                        <button  class="edit-btn"onclick =editExpense('${user.description}','${user.amount}','${user.category}','${user.id}')> 
+    const childHTML = `<li id=${user._id}> ${user.amount} - ${user.description} - ${user.category} 
+                        <button  class="delete-btn" onclick =deleteExpense('${user._id}')> Delete  </button>  
+                        <button  class="edit-btn"onclick =editExpense('${user.description}','${user.amount}','${user.category}','${user._id}')> 
                         Edit </button>                                              
                         </li>`
 

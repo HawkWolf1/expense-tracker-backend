@@ -2,23 +2,16 @@ const mongoose = require('mongoose');
 
 
 const expenseSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    unique: true,
-    autoIncrement: true,
-  },
   amount: Number,
 
   description: {
-    type: String,
-    unique: true,
+    type: String
   },
   category: String,
 
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'myTable',
+    ref: 'User',
   },
 }, {
   timestamps: false

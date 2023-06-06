@@ -62,59 +62,67 @@ const downloadExpense = async(req,res) => {
 
 
 
-
-
 const addExpense = async (req, res, next) => {
-    const t = await sequelize.transaction()
-    const { amount, description, category } = req.body;
-  
-    if (amount === undefined || amount.length === 0) {
-      return res.status(400).json({ success: false, message: 'parameters missing' });
-    }
-  
-    try {
-      const expense = await ETable.create({ amount, description, category, ourUserId: req.user.id }, {transaction:t});
-  
-      const totalExpense = Number(req.user.totalExpenses) + Number(amount);
-      console.log(totalExpense);
-  
-      await myTable.update(
-        {
-          totalExpenses: totalExpense,
-        },
-        {
-          where: { id: req.user.id },
-          transaction:t
-        }
-      )
-      await t.commit()
-      res.status(201).json({ expense: expense });
-    } catch (err) {
-      await t.rollback()
-      return res.status(500).json({ success: false, error: err });
-    }
-  };
+  const { amount, description, category } = req.body;
+
+  if (!amount || !description || !category) {
+    return res.status(400).json({ success: false, message: 'Missing parameters' });
+  }
+
+  try {
+    const expense = new ETable({ amount, description, category, userId: req.user._id });
+    await expense.save();
+
+    const totalExpense = req.user.totalExpenses + Number(amount);
+
+    req.user.totalExpenses = totalExpense;
+    await req.user.save();
+
+    res.status(201).json({ success: true, expense });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+};
 
 
-  
 
-  const getExpense = async (req, res, next) => {
-    const page = Number(req.query.page)-1
-    const items = Number(req.query.items)
-    try {
-        const expense = await ETable.findAndCountAll({
-          where: {ourUserId : req.user.id}, 
-          offset: (page)*items,
-          limit: items
-        })
-0
-        console.log(expense)
-        res.status(200).json({ ex: expense })
-    } catch (error) {
-        console.log('Get user is failing', JSON.stringify(error))
-        res.status(500).json({ error: 'err' })
-    }
-}
+
+const getExpense = async (req, res, next) => {
+  const page = Number(req.query.page) - 1;
+  const items = Number(req.query.items);
+  try {
+    const expense = await ETable.find({ userId: req.user._id })
+      .skip(page * items)
+      .limit(items);
+
+    const count = await ETable.countDocuments({ userId: req.user._id });
+
+    res.status(200).json({ ex: {expense, count} });
+    console.log('fffffffffff')
+
+  } catch (error) {
+    console.log('Get expenses failed', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+//   const getExpense = async (req, res, next) => {
+//     const page = Number(req.query.page)-1
+//     const items = Number(req.query.items)
+//     try {
+//         const expense = await ETable.findAndCountAll({
+//           where: {ourUserId : req.user.id}, 
+//           offset: (page)*items,
+//           limit: items
+//         })
+// 0
+//         console.log(expense)
+//         res.status(200).json({ ex: expense })
+//     } catch (error) {
+//         console.log('Get user is failing', JSON.stringify(error))
+//         res.status(500).json({ error: 'err' })
+//     }
+// }
 
 
 
