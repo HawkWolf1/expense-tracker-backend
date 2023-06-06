@@ -98,33 +98,13 @@ const getExpense = async (req, res, next) => {
     const count = await ETable.countDocuments({ userId: req.user._id });
 
     res.status(200).json({ ex: {expense, count} });
-    console.log('fffffffffff')
+
 
   } catch (error) {
     console.log('Get expenses failed', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-
-//   const getExpense = async (req, res, next) => {
-//     const page = Number(req.query.page)-1
-//     const items = Number(req.query.items)
-//     try {
-//         const expense = await ETable.findAndCountAll({
-//           where: {ourUserId : req.user.id}, 
-//           offset: (page)*items,
-//           limit: items
-//         })
-// 0
-//         console.log(expense)
-//         res.status(200).json({ ex: expense })
-//     } catch (error) {
-//         console.log('Get user is failing', JSON.stringify(error))
-//         res.status(500).json({ error: 'err' })
-//     }
-// }
-
-
 
 
 
