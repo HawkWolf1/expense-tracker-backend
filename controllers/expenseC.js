@@ -108,43 +108,79 @@ const getExpense = async (req, res, next) => {
 
 
 
-const deleteExpense = async (req, res, next) =>{
-    try{
-        if(req.params.id == 'undefined'){
-            console.log('ID is missing')
-            return  res.status(400).json({ 
-                                 err: 'ID is missing' })
-        }
-        const uId = req.params.id
-        console.log(uId)
 
-        const expense = await ETable.findOne({
-          where: {
-            id: uId,
-            ourUserId: req.user.id
-          }
-        })
-        const totalExpenses = await ETable.sum('amount', {
-          where: { ourUserId: req.user.id }
-        })
-        const updatedTotalExpenses = totalExpenses - expense.amount
+const deleteExpense = async (req, res, next) => {
+  try {
+    if (req.params.id === undefined) {
+      console.log('ID is missing');
+      return res.status(400).json({ err: 'ID is missing' });
+    }
+    const expenseId = req.params.id;
+    console.log(expenseId);
 
-        const RowD = await ETable.destroy({ where: { id: uId, ourUserId : req.user.id} })
+    const expense = await ETable.findOneAndDelete({
+      _id: expenseId,
+      userId: req.user._id,
+    });
 
-        await myTable.update(
-          { totalExpenses: updatedTotalExpenses },
-          { where: { id: req.user.id } }
-        )
+    if (!expense) {
+      return res.status(404).json({ success: false, message: 'Expense does not belong to the user' });
+    }
+
+    const totalExpenses = await ETable.aggregate([
+      { $match: { userId: req.user._id } },
+      { $group: { _id: null, total: { $sum: '$amount' } } },
+    ]);
+
+    const updatedTotalExpenses = totalExpenses.length > 0 ? totalExpenses[0].total : 0;
+
+    await myTable.updateOne({ _id: req.user._id }, { $set: { totalExpenses: updatedTotalExpenses } });
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.log('Not working', JSON.stringify(err));
+    res.status(500).json(err);
+  }
+};
+
+
+// const deleteExpense = async (req, res, next) =>{
+//     try{
+//         if(req.params.id == 'undefined'){
+//             console.log('ID is missing')
+//             return  res.status(400).json({ 
+//                                  err: 'ID is missing' })
+//         }
+//         const uId = req.params.id
+//         console.log(uId)
+
+//         const expense = await ETable.findOne({
+//           where: {
+//             id: uId,
+//             ourUserId: req.user.id
+//           }
+//         })
+//         const totalExpenses = await ETable.sum('amount', {
+//           where: { ourUserId: req.user.id }
+//         })
+//         const updatedTotalExpenses = totalExpenses - expense.amount
+
+//         const RowD = await ETable.destroy({ where: { id: uId, ourUserId : req.user.id} })
+
+//         await myTable.update(
+//           { totalExpenses: updatedTotalExpenses },
+//           { where: { id: req.user.id } }
+//         )
         
-         if (RowD ===0){
-            return res.status(404).json({success: false, message: 'expense doesnot belong to the user'})
-         }
-        res.sendStatus(200)                 
-    }catch (err) {
-                console.log('Not working', JSON.stringify(err))
-                res.status(500).json(err)
-            }        
-}
+//          if (RowD ===0){
+//             return res.status(404).json({success: false, message: 'expense doesnot belong to the user'})
+//          }
+//         res.sendStatus(200)                 
+//     }catch (err) {
+//                 console.log('Not working', JSON.stringify(err))
+//                 res.status(500).json(err)
+//             }        
+// }
 
 
 
