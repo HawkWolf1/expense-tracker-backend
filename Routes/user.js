@@ -28,6 +28,6 @@ router.get('/password/resetpassword/:id', resetpasswordController.resetMyP)
 router.get('/password/updatepassword/:id', resetpasswordController.updateMyP)
 
 
-router.get('/user/download', userAuthentication.authenticate, expenseController.downloadExpense)
+// router.get('/user/download', userAuthentication.authenticate, expenseController.downloadExpense)
 
 module.exports = router
