@@ -57,6 +57,7 @@ const deleteExpense = async (req, res, next) => {
     }
     const expenseId = req.params.id;
     console.log(expenseId);
+ 
 
     const expense = await ETable.findOneAndDelete({
       _id: expenseId,
