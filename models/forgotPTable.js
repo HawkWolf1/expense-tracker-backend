@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const forgotPasswordSchema = new mongoose.Schema({
-  id: {
-    type: mongoose.Schema.Types.UUID,
-    default: mongoose.Types.UUIDv4,
-    index: true,
-    unique: true,
-  },
   active: Boolean,
   expiresby: Date,
   userId: {
