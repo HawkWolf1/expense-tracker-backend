@@ -1,18 +1,12 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    unique: true,
-    autoIncrement: true,
-  },
   paymentid: String,
   orderid: String,
   status: String,
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'MyTable',
+    ref: 'User',
   },
 }, {
   timestamps: false

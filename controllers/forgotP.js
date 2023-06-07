@@ -58,9 +58,9 @@ const forgotMyP = async (req, res) => {
         const id =  req.params.id;
        
         try{
-            forgotPwd = await forgotPassword.findOne({ where : { id }})
+            forgotPwd = await forgotPassword.findOne({ id })
             if (forgotPwd){
-                if (forgotPwd.dataValues.active){          
+                if (forgotPwd.active){          
                     res.status(201).send(`<html>
                                                         <form action="/password/updatepassword/${id}" method="get">
                                                             <label for="newPassword">Enter New password</label>
@@ -86,15 +86,15 @@ const forgotMyP = async (req, res) => {
         const { newPassword } = req.query;
       
         try {
-          const forgotPwd = await forgotPassword.findOne({ where: { id } });
-          if (forgotPwd && forgotPwd.dataValues.active) {
-            const user = await myTable.findByPk(forgotPwd.ourUserId);
+          const forgotPwd = await forgotPassword.findOne({ id });
+          if (forgotPwd && forgotPwd.active) {
+            const user = await myTable.findById(forgotPwd.UserId);
             if (user) {
                 const salt = await bcrypt.genSalt(10)
                 const hashedPassword = await bcrypt.hash(newPassword, salt)
                     
-              await user.update({ password: hashedPassword });
-              await forgotPwd.update({ active: false });
+              await user.updateOne({ password: hashedPassword });
+              await forgotPwd.updateOne({ active: false });
               return res.status(200).json({ success: true, message: 'Password updated successfully' });
 
          } else {
