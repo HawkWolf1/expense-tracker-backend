@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 require('dotenv').config() 
 
-const sequelize = new Sequelize('practise', 'root', process.env.GIT_PWD, {
+const sequelize = new Sequelize('practise', 'root', 'Bucketone23@', {
     dialect: 'mysql',
     host: 'localhost'
 })
